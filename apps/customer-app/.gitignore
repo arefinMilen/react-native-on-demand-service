@@ -1,0 +1,13 @@
+# Customer Mobile App Environment & Secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies & Expo Build Output
+node_modules/
+.expo/
+.expo-shared/
+web-build/
+
+# Logs
+*.log

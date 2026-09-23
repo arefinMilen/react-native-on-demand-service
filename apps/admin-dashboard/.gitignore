@@ -1,0 +1,13 @@
+# Admin Dashboard Environment & Secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies & Next.js Build Output
+node_modules/
+.next/
+out/
+build/
+
+# Logs
+*.log
