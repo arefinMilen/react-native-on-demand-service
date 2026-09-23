@@ -7,14 +7,14 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
-    "dev": "tsx watch src/server.ts",
+    "dev": "node --max-old-space-size=2048 ./node_modules/tsx/dist/cli.mjs watch src/server.ts",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
-    "seed": "prisma db seed"
+    "seed": "node --max-old-space-size=2048 ./node_modules/tsx/dist/cli.mjs prisma/seed.ts"
   },
   "prisma": {
-    "seed": "ts-node-dev prisma/seed.ts"
+    "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.10.0",
