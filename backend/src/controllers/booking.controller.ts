@@ -87,3 +87,16 @@ export const getBookingById = asyncHandler(async (req: AuthenticatedRequest, res
 
   res.status(200).json(new ApiResponse(200, booking, 'Booking details fetched'));
 });
+
+export const getAllBookings = asyncHandler(async (_req: AuthenticatedRequest, res: Response) => {
+  const bookings = await db.booking.findMany({
+    include: {
+      service: true,
+      customer: { include: { customerProfile: true } },
+      provider: { include: { providerProfile: true } },
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  res.status(200).json(new ApiResponse(200, bookings, 'All platform bookings fetched'));
+});
