@@ -14,16 +14,20 @@ export class LocationService {
     categoryId: string,
     coords: LocationCoordinates
   ): Promise<void> {
-    const key = `active_providers:${categoryId}`;
-    // GEOADD key longitude latitude member
-    await redis.geoadd(key, coords.longitude, coords.latitude, providerId);
-    
-    // Also store last updated coordinates in a hash for quick lookup
-    await redis.hset(`provider_coord:${providerId}`, {
-      lat: coords.latitude.toString(),
-      lng: coords.longitude.toString(),
-      updatedAt: Date.now().toString(),
-    });
+    try {
+      const key = `active_providers:${categoryId}`;
+      // GEOADD key longitude latitude member
+      await redis.geoadd(key, coords.longitude, coords.latitude, providerId);
+
+      // Also store last updated coordinates in a hash for quick lookup
+      await redis.hset(`provider_coord:${providerId}`, {
+        lat: coords.latitude.toString(),
+        lng: coords.longitude.toString(),
+        updatedAt: Date.now().toString(),
+      });
+    } catch (err: any) {
+      console.warn('⚠️ Redis updateProviderLocation error (fallback mode):', err.message);
+    }
   }
 
   /**
@@ -33,9 +37,13 @@ export class LocationService {
     providerId: string,
     categoryId: string
   ): Promise<void> {
-    const key = `active_providers:${categoryId}`;
-    await redis.zrem(key, providerId);
-    await redis.del(`provider_coord:${providerId}`);
+    try {
+      const key = `active_providers:${categoryId}`;
+      await redis.zrem(key, providerId);
+      await redis.del(`provider_coord:${providerId}`);
+    } catch (err: any) {
+      console.warn('⚠️ Redis removeProviderFromActive error (fallback mode):', err.message);
+    }
   }
 
   /**
